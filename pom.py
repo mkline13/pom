@@ -72,10 +72,10 @@ def main(session):
             interval_duration = session.rest_interval
 
         # count the current interval
-        session.increment_interval_count()
 
         # start next interval
         do_interval(interval_duration)
+        session.increment_interval_count()
 
         # on interval finish
         print("\tInterval complete!")
