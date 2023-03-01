@@ -3,7 +3,7 @@ import time
 from time import sleep, monotonic
 from subprocess import Popen
 from os.path import join, dirname
-from sys import argv
+from sys import argv, exit
 
 
 class Beeper:
@@ -84,12 +84,32 @@ def main(session):
         beeper.stop()
 
 
-if __name__ == '__main__':
-    work, rest = int(argv[1]), int(argv[2])
-    s = Session(work, rest)
+def usage():
+    print(f"usage: `pom <work_interval_minutes> <rest_interval_minutes>`")
 
+
+if __name__ == '__main__':
     print("=== Pomodoro Timer [ctrl-C to quit] ===")
+
+    if len(argv) != 3:
+        print("Error: wrong number of arguments.")
+        usage()
+        exit(1)
+
     try:
-        main(s)
-    except KeyboardInterrupt:
-        print(f"\nPomodoro session complete. ({s.interval_count()} work interval(s) completed)")
+        work, rest = int(argv[1]), int(argv[2])
+        print(f"\tWorking: {work} minute(s)")
+        print(f"\tResting: {rest} minute(s)")
+        s = Session(work, rest)
+
+        # start main program loop, handle ctrl-C
+        try:
+            main(s)
+        except KeyboardInterrupt:
+            print(f"\nPomodoro session complete. ({s.interval_count()} work interval(s) completed)")
+            exit(0)
+
+    except ValueError:
+        print("Error: invalid arguments.")
+        usage()
+        exit(1)
