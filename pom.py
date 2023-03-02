@@ -50,11 +50,12 @@ class Session:
 def do_interval(minutes):
     interval_start_time_sec = time.monotonic()
     elapsed_min = 0.0
-    minutes = float(minutes)
+    f_minutes = float(minutes)
 
-    while elapsed_min < minutes:
-        percentage = round(elapsed_min / minutes * 100)
-        print(f"\t[{str(percentage).rjust(3)}%]\t{round(elapsed_min, 2)} of {round(minutes, 2)} minutes")
+    while elapsed_min < f_minutes:
+        percentage = round(elapsed_min / f_minutes * 100)
+        percentage_str = f"[{percentage}%]".ljust(6)
+        print(f"\t{percentage_str}\t{round(elapsed_min, 2)} of {minutes} minutes")
         sleep(30)
         elapsed_min = (monotonic() - interval_start_time_sec) / 60
     print(f"\t[100%]\t{round(minutes)} of {round(minutes)} minutes")
@@ -89,7 +90,7 @@ def usage():
 
 
 def main():
-    print("=== Pomodoro Timer [ctrl-C to quit] ===")
+    print("\n=== Pomodoro Timer [ctrl-C to quit] ===")
 
     if len(argv) != 3:
         print("Error: wrong number of arguments.")
