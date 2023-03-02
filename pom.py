@@ -59,7 +59,7 @@ def do_interval(minutes):
         elapsed_min = (monotonic() - interval_start_time_sec) / 60
 
 
-def main(session):
+def ui_loop(session):
     audio_file_path = join(dirname(argv[0]), "alarm.wav")
     beeper = Beeper(audio_file_path)
 
@@ -88,28 +88,37 @@ def usage():
     print(f"usage: `pom <work_interval_minutes> <rest_interval_minutes>`")
 
 
-if __name__ == '__main__':
+def main():
     print("=== Pomodoro Timer [ctrl-C to quit] ===")
 
     if len(argv) != 3:
         print("Error: wrong number of arguments.")
         usage()
-        exit(1)
+        return 1
 
     try:
         work, rest = int(argv[1]), int(argv[2])
-        print(f"\tWorking: {work} minute(s)")
-        print(f"\tResting: {rest} minute(s)")
-        s = Session(work, rest)
-
-        # start main program loop, handle ctrl-C
-        try:
-            main(s)
-        except KeyboardInterrupt:
-            print(f"\nPomodoro session complete. ({s.interval_count()} work interval(s) completed)")
-            exit(0)
-
     except ValueError:
         print("Error: invalid arguments.")
         usage()
-        exit(1)
+        return 1
+
+    if work < 0 or rest < 0:
+        print("Error: intervals must be non-negative")
+        usage()
+        return 1
+
+    # program state stored in a Session instance so that it can be accessed easily following a keyboard interrupt.
+    s = Session(work, rest)
+
+    # start main program loop, handle ctrl-C
+    try:
+        ui_loop(s)
+    except KeyboardInterrupt:
+        print(f"\nPomodoro session complete. ({s.interval_count()} work interval(s) completed)")
+        return 0
+
+
+if __name__ == '__main__':
+    status = main()
+    exit(status)
