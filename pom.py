@@ -75,8 +75,6 @@ def ui_loop(session):
             _ = input(f"Press [enter] to begin rest interval ({session.rest_interval} minutes) ")
             interval_duration = session.rest_interval
 
-        # count the current interval
-
         # start next interval
         do_interval(interval_duration)
         session.increment_interval_count()
