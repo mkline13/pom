@@ -57,6 +57,7 @@ def do_interval(minutes):
         print(f"\t[{str(percentage).rjust(3)}%]\t{round(elapsed_min, 2)} of {round(minutes, 2)} minutes")
         sleep(30)
         elapsed_min = (monotonic() - interval_start_time_sec) / 60
+    print(f"\t[100%]\t{round(minutes)} of {round(minutes)} minutes")
 
 
 def ui_loop(session):
@@ -65,10 +66,10 @@ def ui_loop(session):
 
     while True:
         if session.current_interval_type() == 1:
-            _ = input(f"Start work interval for {session.work_interval}m? [press enter] ")
+            _ = input(f"Press [enter] to begin work interval ({session.work_interval} minutes) ")
             interval_duration = session.work_interval
         else:
-            _ = input(f"Start rest interval for {session.rest_interval}m?  [press enter] ")
+            _ = input(f"Press [enter] to begin rest interval ({session.rest_interval} minutes) ")
             interval_duration = session.rest_interval
 
         # count the current interval
@@ -78,9 +79,8 @@ def ui_loop(session):
         session.increment_interval_count()
 
         # on interval finish
-        print("\tInterval complete!")
         beeper.play()
-        _ = input("continue [press enter] ")
+        _ = input("Press [enter] to silence alarm and continue...")
         beeper.stop()
 
 
