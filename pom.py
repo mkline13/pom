@@ -52,13 +52,15 @@ def do_interval(minutes):
     elapsed_min = 0.0
     f_minutes = float(minutes)
 
+    total_bars = 30
     while elapsed_min < f_minutes:
-        percentage = round(elapsed_min / f_minutes * 100)
-        percentage_str = f"[{percentage}%]".ljust(6)
-        print(f"\t{percentage_str}\t{round(elapsed_min, 2)} of {minutes} minutes")
-        sleep(30)
+        # draw a bar graph
+        percentage = elapsed_min / f_minutes
+        bars = int(total_bars * percentage)
+        print(f"\t[{'=' * bars}{' ' * (total_bars-bars)}] {round(percentage * 100)}%", end='\r', flush=True)
+        sleep(1)
         elapsed_min = (monotonic() - interval_start_time_sec) / 60
-    print(f"\t[100%]\t{round(minutes)} of {round(minutes)} minutes")
+    print(f"\t[{'=' * total_bars}] 100%")
 
 
 def ui_loop(session):
